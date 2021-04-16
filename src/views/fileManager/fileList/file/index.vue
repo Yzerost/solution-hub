@@ -35,23 +35,25 @@
 </template>
 
 <script>
-import { s3 } from '../../../../utils/s3'
+import { s3, bucket } from '../../../../utils/s3'
 
 export default {
   data() {
     return {
       s3: null,
-      fileData: null
+      fileData: null,
+      bucket: bucket
     }
   },
   created() {
     this.s3 = s3()
+    this.bucket = bucket
     this.initFileList()
   },
   methods: {
     initFileList() {
       var params = {
-        Bucket: 'yzerost', /* required */
+        Bucket: this.bucket,
         Delimiter: '',
         Prefix: this.$route.name
       }
