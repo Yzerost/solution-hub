@@ -25,7 +25,7 @@
         <div v-for="(item,index) in fileList" :key="index">
           <el-select
             v-model="productValueList[index]"
-            style="margin-left: 15px; margin-top: 10px; width: 120px;"
+            style="margin-left: 15px; margin-top: 10px; width: 100px;"
             placeholder="产品选择"
           >
             <el-option
@@ -35,7 +35,7 @@
               :value="product.productValue"
             />
           </el-select>
-          <el-select v-model="kindValueList[index]" placeholder="分类选择" style="width: 120px">
+          <el-select v-model="kindValueList[index]" placeholder="分类选择" style="width: 100px">
             <el-option
               v-for="kind in kinds"
               :key="kind.kindValue"
@@ -43,8 +43,8 @@
               :value="kind.kindValue"
             />
           </el-select>
-          <span style="width: 300px;margin-left:30px;text-align: center">{{ item.name }} </span>
-          <span style="margin-left: 30px">{{ item.showSize }}MB </span>
+          <span style="font-size: 14px; display:-moz-inline-box; display:inline-block; width:40%;padding-left: 30px">{{ item.name }} </span>
+          <span style="font-size: 14px; display:-moz-inline-box; display:inline-block; width:10%">{{ item.ShowSize }} </span>
           <div class="bar">
             <el-progress :text-inside="true" :stroke-width="18" status="exception" :show-text="true" :percentage="item.uploadPercent" />
           </div>
@@ -108,7 +108,16 @@ export default {
         // eslint-disable-next-line no-new-object
         const file = new Object()
         // 直接获取的folderFileList[i]是File类型，和el-upload获取的内容不一致，需要重新封装
-        this.$set(file, 'showSize', Math.round(folderFileList[i].size / 1024 / 1024 * 100) / 100)
+        // this.$set(file, 'ShowSize', Math.round(folderFileList[i].size / 1024 / 1024 * 100) / 100)
+        if (folderFileList[i].size <= 1024) {
+          this.$set(file, 'ShowSize', String(folderFileList[i].size) + ' B')
+        } else if (folderFileList[i].size > 1024 && folderFileList[i].size <= 1024 * 1024) {
+          this.$set(file, 'ShowSize', String(Math.round(folderFileList[i].size / 1024 * 100) / 100) + ' KB')
+        } else if (folderFileList[i].size > 1024 * 1024 && folderFileList[i].size <= 1024 * 1024 * 1024) {
+          this.$set(file, 'ShowSize', String(Math.round(folderFileList[i].size / 1024 / 1024 * 100) / 100) + ' MB')
+        } else {
+          this.$set(file, 'ShowSize', String(Math.round(folderFileList[i].size / 1024 / 1024 / 1024 * 100) / 100) + ' GB')
+        }
         this.$set(file, 'raw', folderFileList[i])
         this.$set(file, 'name', folderFileList[i].name)
         this.$set(file, 'uploadFlag', true)
@@ -125,7 +134,15 @@ export default {
     },
     handleChange(file, fileList) {
       this.fileList = fileList
-      this.$set(file, 'showSize', Math.round(file.size / 1024 / 1024 * 100) / 100)
+      if (file.size <= 1024) {
+        this.$set(file, 'ShowSize', String(file.size) + ' B')
+      } else if (file.size > 1024 && file.size <= 1024 * 1024) {
+        this.$set(file, 'ShowSize', String(Math.round(file.size / 1024 * 100) / 100) + ' KB')
+      } else if (file.size > 1024 * 1024 && file.size <= 1024 * 1024 * 1024) {
+        this.$set(file, 'ShowSize', String(Math.round(file.size / 1024 / 1024 * 100) / 100) + ' MB')
+      } else {
+        this.$set(file, 'ShowSize', String(Math.round(file.size / 1024 / 1024 / 1024 * 100) / 100) + ' GB')
+      }
       this.$set(file, 'uploadFlag', true)
       // console.log(file)
     },
@@ -229,7 +246,7 @@ export default {
 <style>
 @import url("//unpkg.com/element-ui@2.0.5/lib/theme-chalk/index.css");
 .bar {
-  width: 30%;
+  width: 20%;
   display: inline-block;
   margin-right: auto;
 }

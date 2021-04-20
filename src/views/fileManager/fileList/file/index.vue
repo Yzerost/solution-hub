@@ -7,12 +7,12 @@
         <el-table :data="fileData.Contents" border highlight-current-row style="width:100%">
           <el-table-column label="文件名称" width="500">
             <template slot-scope="scope">
-              <span style="margin-left: 10px">{{ scope.row.Key }}</span>
+              <span style="margin-left: 10px">{{ scope.row.FileName }}</span>
             </template>
           </el-table-column>
           <el-table-column label="文件大小" width="100">
             <template slot-scope="scope">
-              <span style="margin-left: 10px">{{ scope.row.Size }}</span>
+              <span style="margin-left: 10px">{{ scope.row.ShowSize }}</span>
             </template>
           </el-table-column>
           <el-table-column label="操作">
@@ -63,9 +63,23 @@ export default {
           console.log(err, err.stack)// an error occurred
         } else {
           if (data && data.Contents) {
-            // console.log(data)
+            console.log(data)
             // self.fileData = [...data.Contents]
             self.fileData = data
+            self.fileData.Contents.forEach((file) => {
+              const FileName = file.Key.replace(data.Prefix + '/', '')
+              self.$set(file, 'FileName', FileName)
+              // const ShowSize = Math.round(file.Size / 1024 / 1024 * 100) / 100
+              if (file.Size <= 1024) {
+                self.$set(file, 'ShowSize', String(file.Size) + ' B')
+              } else if (file.Size > 1024 && file.Size <= 1024 * 1024) {
+                self.$set(file, 'ShowSize', String(Math.round(file.Size / 1024 * 100) / 100) + ' KB')
+              } else if (file.Size > 1024 * 1024 && file.Size <= 1024 * 1024 * 1024) {
+                self.$set(file, 'ShowSize', String(Math.round(file.Size / 1024 / 1024 * 100) / 100) + ' MB')
+              } else {
+                self.$set(file, 'ShowSize', String(Math.round(file.Size / 1024 / 1024 / 1024 * 100) / 100) + ' GB')
+              }
+            })
           }
         }
       })
