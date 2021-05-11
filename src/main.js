@@ -11,7 +11,8 @@ import '@/styles/index.scss' // global css
 import App from './App'
 import store from './store'
 import router from './router'
-
+import axios from 'axios'
+axios.defaults.baseURL = 'http://localhost:8080'
 import '@/icons' // icon
 import '@/permission' // permission control
 

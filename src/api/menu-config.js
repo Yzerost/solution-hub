@@ -1,5 +1,5 @@
 // 当前构造本地数据，后续从接口获取
-import productTypes from './product'
+import { productTypes } from './configs.js'
 const childrenArray = []
 
 productTypes.forEach((product) => {

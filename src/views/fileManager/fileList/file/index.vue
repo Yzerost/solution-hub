@@ -5,7 +5,7 @@
       <!--el-button style="margin-left: 10px;" size="small" type="success" @click="listFiles">查看文件</el-button-->
       <div v-if="fileData">
         <el-table :data="fileData.Contents" border highlight-current-row style="width:100%">
-          <el-table-column label="文件名称" width="500">
+          <el-table-column label="文件名称" width="900" >
             <template slot-scope="scope">
               <span style="margin-left: 10px">{{ scope.row.FileName }}</span>
             </template>
@@ -52,7 +52,7 @@ export default {
   },
   methods: {
     initFileList() {
-      var params = {
+      const params = {
         Bucket: this.bucket,
         Delimiter: '',
         Prefix: this.$route.name
@@ -63,7 +63,7 @@ export default {
           console.log(err, err.stack)// an error occurred
         } else {
           if (data && data.Contents) {
-            console.log(data)
+            // console.log(data)
             // self.fileData = [...data.Contents]
             self.fileData = data
             self.fileData.Contents.forEach((file) => {

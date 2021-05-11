@@ -25,7 +25,7 @@
         <div v-for="(item,index) in fileList" :key="index">
           <el-select
             v-model="productValueList[index]"
-            style="margin-left: 15px; margin-top: 10px; width: 100px;"
+            style="margin-left: 15px; margin-top: 10px; width: 120px;"
             placeholder="产品选择"
           >
             <el-option
@@ -35,7 +35,7 @@
               :value="product.productValue"
             />
           </el-select>
-          <el-select v-model="kindValueList[index]" placeholder="分类选择" style="width: 100px">
+          <el-select v-model="kindValueList[index]" placeholder="分类选择" style="width: 120px">
             <el-option
               v-for="kind in kinds"
               :key="kind.kindValue"
@@ -60,7 +60,7 @@
 <script>
 
 import { s3, bucket } from '../../../utils/s3'
-import { products } from '../../../api/product-config.js'
+import { products, kinds } from '../../../api/configs.js'
 
 export default {
   name: 'App',
@@ -73,19 +73,7 @@ export default {
       products: [],
       kindValueList: [],
       productValue: '',
-      kinds: [{
-        kindValue: 'iso',
-        label: 'iso文件'
-      }, {
-        kindValue: 'installer',
-        label: '安装包'
-      }, {
-        kindValue: 'doc',
-        label: '文档'
-      }, {
-        kindValue: 'others',
-        label: '其他'
-      }],
+      kinds: [],
       kindValue: '',
       fileList: []
     }
@@ -94,6 +82,7 @@ export default {
     this.s3 = s3()
     this.bucket = bucket
     this.products = products
+    this.kinds = kinds
   },
   methods: {
     // 触发文件夹选择

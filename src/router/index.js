@@ -58,23 +58,42 @@ export const constantRoutes = [
   },
 
   {
-    path: '/example',
+    path: '/solution',
     component: Layout,
-    redirect: '/example/table',
-    name: 'Example',
-    meta: { title: '解决方案', icon: 'example' },
+    redirect: '/solution/Solution',
+    name: 'Solution',
+    meta: { title: '解决方案' },
     children: [
       {
-        path: 'table',
-        name: 'Table',
-        component: () => import('@/views/table/index'),
-        meta: { title: 'Table', icon: 'table' }
+        path: 'dashboard',
+        name: 'dashboard',
+        meta: { title: '解决方案图谱' },
+        component: () => import('@/views/solution/SolutionDashboard')
       },
       {
-        path: 'tree',
-        name: 'Tree',
-        component: () => import('@/views/tree/index'),
-        meta: { title: 'Tree', icon: 'tree' }
+        path: 'list/:id',
+        name: 'list',
+        hidden: true,
+        meta: { title: '方案列表' },
+        component: () => import('@/views/solution/VersionList')
+      },
+      {
+        path: 'type',
+        name: 'type',
+        component: () => import('@/views/solution/Type'),
+        meta: { title: '分类管理' }
+      },
+      {
+        path: 'solution',
+        name: 'solution',
+        component: () => import('@/views/solution/Solution'),
+        meta: { title: '方案管理' }
+      },
+      {
+        path: 'version',
+        name: 'version',
+        component: () => import('@/views/solution/SolutionVersion'),
+        meta: { title: '版本管理' }
       }
     ]
   },
@@ -111,6 +130,18 @@ export const constantRoutes = [
         name: 'Form',
         component: () => import('@/views/form/index'),
         meta: { title: '权限管理', icon: 'form' }
+      }
+    ]
+  },
+  {
+    path: '/logs',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'logs',
+        component: () => import('@/views/form/index'),
+        meta: { title: '操作日志', icon: 'form' }
       }
     ]
   },
