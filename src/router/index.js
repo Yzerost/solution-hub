@@ -71,11 +71,18 @@ export const constantRoutes = [
         component: () => import('@/views/solution/SolutionDashboard')
       },
       {
-        path: 'list/:id',
-        name: 'list',
+        path: 'list',
+        name: 'versionList',
         hidden: true,
-        meta: { title: '方案列表' },
+        meta: { title: '版本列表' },
         component: () => import('@/views/solution/VersionList')
+      },
+      {
+        path: 'detail',
+        name: 'versionDetail',
+        hidden: true,
+        meta: { title: '版本详情' },
+        component: () => import('@/views/solution/VersionDetail')
       },
       {
         path: 'type',
