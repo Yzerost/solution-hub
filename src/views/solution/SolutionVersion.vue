@@ -32,16 +32,16 @@
       <el-table-column prop="solution" label="所属解决方案" width="180" align="center" />
       <el-table-column prop="version" label="版本号" width="180" align="center" />
       <el-table-column prop="status" label="发布状态" width="100" align="center" />
-      <el-table-column prop="brief" label="简介" align="center" />
+      <el-table-column :show-overflow-tooltip="true" prop="brief" label="简介" align="center" />
       <el-table-column
         v-slot="scope"
         label="操作"
-        width="160"
+        width="120"
         align="center"
       >
         <template>
           <el-button type="text" size="small" round @click="editDialogFormVisible = true,beforeEdit(scope.row)">编辑</el-button>
-          <el-dialog title="编辑解决方案版本" :visible.sync="editDialogFormVisible" :close-on-click-modal="false">
+          <el-dialog custom-class="customWidth" title="编辑解决方案版本" :visible.sync="editDialogFormVisible" :close-on-click-modal="false">
             <el-form :model="editSolutionVersion" :label-position="labelPosition" label-width="15%">
               <el-form-item label="解决方案">
                 <el-select v-model="editSolutionVersion.solution" filterable placeholder="选择解决方案" value-key="id" style="width: 30%" @change="getEditSolutionColumn">
@@ -60,7 +60,7 @@
                 <el-input v-model="editSolutionVersion.version" />
               </el-form-item>
               <el-form-item label="发布状态:">
-                <el-select v-model="editSolutionVersion.status"  placeholder="选择发布状态" value-key="id" style="width: 25%" @change="getEditStatusColumn">
+                <el-select v-model="editSolutionVersion.status" placeholder="选择发布状态" value-key="id" style="width: 25%" @change="getEditStatusColumn">
                   <el-option
                     v-for="status in statusList"
                     :key="status.value"
@@ -83,7 +83,7 @@
                 </el-checkbox-group>
               </el-form-item>
               <el-form-item label="配套文件:" style="width: 100%">
-                <el-button type="primary" size="mini" align="right" tooltip-effect="dark" @click="addItem">添加文件</el-button>
+                <el-button type="primary" size="mini" align="right" tooltip-effect="dark" @click="addEditItem">添加文件</el-button>
               </el-form-item>
               <el-table :data="editSolutionVersion.fileList" style="width:100%; " stripe border empty-text="暂无文件" size="mini">
                 <el-table-column label="序号" type="index" width="80" align="center" />
@@ -157,6 +157,11 @@
                     <el-input v-model="scope.row.description" />
                   </template>
                 </el-table-column>
+                <el-table-column>
+                  <template slot-scope="scope">
+                    <el-button type="text" size="small" round @click="delEditItem(scope.$index)">删除</el-button>
+                  </template>
+                </el-table-column>
               </el-table>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -170,7 +175,7 @@
             icon="el-icon-info"
             icon-color="red"
             :title="`是否删除：【${scope.row.name}】？`"
-            @onConfirm="handleDelete(scope.row)"
+            @onConfirm="delVersion(scope.row)"
           >
             <el-button slot="reference" type="text" size="small">删除</el-button>
           </el-popconfirm>
@@ -181,7 +186,7 @@
     <!--新增按钮-->
     <el-col :span="1" class="grid">
       <el-button type="primary" icon="el-icon-plus" size="mini" round @click="addDialogFormVisible = true,getSolutions()">新增</el-button>
-      <el-dialog title="新建解决方案版本" :visible.sync="addDialogFormVisible" :close-on-click-modal="false">
+      <el-dialog custom-class="customWidth" title="新建解决方案版本" :visible.sync="addDialogFormVisible" :close-on-click-modal="false">
         <el-form :model="solutionVersion" :label-position="labelPosition" label-width="15%">
           <el-form-item label="解决方案:">
             <el-select v-model="solutionVersion.solution" filterable placeholder="选择解决方案" value-key="id" style="width: 30%" @change="getSolutionColumn">
@@ -295,6 +300,11 @@
             <el-table-column label="描述" align="center">
               <template slot-scope="scope">
                 <el-input v-model="scope.row.description" />
+              </template>
+            </el-table-column>
+            <el-table-column>
+              <template slot-scope="scope">
+                <el-button type="text" size="small" round @click="delItem(scope.$index)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -417,6 +427,19 @@ export default {
       const item = {}
       this.fileList.push(item)
       this.$set(this.solutionVersion, 'fileList', this.fileList)
+    },
+    addEditItem() {
+      const item = {}
+      this.editSolutionVersion.fileList.push(item)
+      // this.fileList.push(item)
+      // this.$set(this.editSolutionVersion, 'fileList', this.fileList)
+    },
+    delItem(index) {
+      this.solutionVersion.fileList.splice(index, 1)
+    },
+    delEditItem(index) {
+      console.log(index)
+      this.editSolutionVersion.fileList.splice(index, 1)
     },
     searchFile(row, product, kind) {
       const params = {
@@ -576,6 +599,40 @@ export default {
       this.currentPage = val
       this.getSolutionVersion(this.currentPage, this.pageSize)
       // console.log(`当前页: ${val}`)
+    },
+    delVersion(solutionVersion) {
+      const url = '/solutionVersion/deleteSoVer'
+      this.isLoading = true
+      axios.delete(url, {
+        params: {
+          id: solutionVersion.id
+        }
+      }).then(res => {
+        // console.log(res.headers)
+        this.isLoading = false
+        this.$message.warning('成功删除解决方案版本【' + solutionVersion.name + '】!')
+        this.getSolutionVersion(this.currentPage, this.pageSize)
+      })
+    },
+    handleBatchDelete() {
+      const ids = this.sels.map(item => item.id).join()
+      this.$confirm('删除选择的所有解决方案版本, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.isLoading = true
+        const url = '/solutionVersion/batchDeleteSoVer'
+        axios.post(url, {
+          ids: ids
+        }).then(res => {
+          // console.log(res)
+          this.isLoading = false
+          if (res.status === 200) {
+            this.getSolutionVersion(this.currentPage, this.pageSize)
+          }
+        })
+      })
     }
   }
 }
@@ -591,5 +648,8 @@ export default {
 }
 .el-form-item__label {
   font-size: 12px;
+}
+.customWidth{
+  width:80%;
 }
 </style>

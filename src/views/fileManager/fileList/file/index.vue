@@ -5,17 +5,17 @@
       <!--el-button style="margin-left: 10px;" size="small" type="success" @click="listFiles">查看文件</el-button-->
       <div v-if="fileData">
         <el-table :data="fileData.Contents" border highlight-current-row style="width:100%">
-          <el-table-column label="文件名称" width="900" >
+          <el-table-column label="文件名称" width="700px" align="center" >
             <template slot-scope="scope">
               <span style="margin-left: 10px">{{ scope.row.FileName }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="文件大小" width="100">
+          <el-table-column label="文件大小" style="width: 100px" align="center">
             <template slot-scope="scope">
               <span style="margin-left: 10px">{{ scope.row.ShowSize }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="操作">
+          <el-table-column label="操作" style="width: 200px" align="center">
             <template slot-scope="scope">
               <el-button
                 size="mini"

@@ -110,7 +110,7 @@ export default {
         this.$set(file, 'raw', folderFileList[i])
         this.$set(file, 'name', folderFileList[i].name)
         this.$set(file, 'uploadFlag', true)
-        console.log(file)
+        // console.log(file)
         this.fileList.push(file)
       }
       // folderFileList.forEach((file) => {
@@ -166,6 +166,7 @@ export default {
       //     IdentityPoolId: IdentityPoolId
       //   })
       // })
+      this.$message.success('开始上传文件，请耐心等待：')
       for (let i = 0; i < this.fileList.length; i++) {
         if (this.fileList[i].uploadFlag) {
           console.log('begin to uploadFile', this.fileList[i].name)
