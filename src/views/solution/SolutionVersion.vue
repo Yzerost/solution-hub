@@ -28,7 +28,7 @@
       <el-table-column type="selection" width="55" />
       <!--索引-->
       <el-table-column type="index" :index="indexMethod" label="序号" width="80" align="center" />
-      <el-table-column prop="name" label="版本名称" width="180" align="center" />
+      <el-table-column prop="name" label="版本名称" width="300" align="center" />
       <el-table-column prop="solution" label="所属解决方案" width="180" align="center" />
       <el-table-column prop="version" label="版本号" width="180" align="center" />
       <el-table-column prop="status" label="发布状态" width="100" align="center" />
@@ -659,5 +659,9 @@ export default {
 }
 .customWidth{
   width:80%;
+}
+.el-tooltip__popper {
+  max-width: 800px;
+
 }
 </style>
