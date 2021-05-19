@@ -163,6 +163,9 @@
                   </template>
                 </el-table-column>
               </el-table>
+              <el-form-item label="修改备注:">
+                <el-input v-model="editSolutionVersion.edit_comment" type="textarea" :rows="2" />
+              </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
               <el-button @click="editDialogFormVisible = false">取 消</el-button>
@@ -490,7 +493,8 @@ export default {
         brief: solutionVersion.brief,
         read_role: JSON.stringify(solutionVersion.read_role),
         write_role: JSON.stringify(solutionVersion.write_role),
-        files: JSON.stringify(files)
+        files: JSON.stringify(files),
+        edit_comment: ''
       }).then(res => {
         // console.log(res)
         this.isLoading = false
@@ -506,6 +510,7 @@ export default {
           this.$set(this.solutionVersion, 'write_role', '')
           this.$set(this.solutionVersion, 'fileList', [])
           this.$set(this.solutionVersion, 'files', '')
+          this.$set(this.solutionVersion, 'edit_comment', '')
         } else {
           this.$message.error(res.status)
         }
@@ -523,6 +528,7 @@ export default {
       this.$set(this.editSolutionVersion, 'read_role', JSON.parse(item.read_role))
       this.$set(this.editSolutionVersion, 'write_role', JSON.parse(item.write_role))
       this.$set(this.editSolutionVersion, 'files', JSON.parse(item.files))
+      this.$set(this.editSolutionVersion, 'edit_comment', item.edit_comment)
       const fileList = []
       JSON.parse(item.files).forEach((file) => {
         fileList.push({
@@ -570,7 +576,8 @@ export default {
         brief: editSolutionVersion.brief,
         read_role: JSON.stringify(editSolutionVersion.read_role),
         write_role: JSON.stringify(editSolutionVersion.write_role),
-        files: JSON.stringify(files)
+        files: JSON.stringify(files),
+        edit_comment: editSolutionVersion.edit_comment
       }).then(res => {
         this.isLoading = false
         if (res.status === 200) {
@@ -585,6 +592,7 @@ export default {
           this.$set(this.editSolutionVersion, 'write_role', '')
           this.$set(this.editSolutionVersion, 'fileList', [])
           this.$set(this.editSolutionVersion, 'files', '')
+          this.$set(this.editSolutionVersion, 'edit_comment', '')
         } else {
           this.$message.error(res.status)
         }
