@@ -1,5 +1,5 @@
 const productsArray = []
-export const roleOptions = ['管理员', '解决方案管理员', '测试', '用服 ', '游客']
+export const roleOptions = ['管理员', '解决方案管理员', '测试', '用服 ', '员工', '合作商', '游客']
 export const productTypes = ['CloudOS', 'CAS', 'ONEStor', 'SNA', 'UCenter', 'OMP', 'CMP', '解决方案']
 export const kindTypes = ['iso', 'installer', 'doc', 'others']
 productTypes.forEach((product) => {
