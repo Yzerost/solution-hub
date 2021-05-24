@@ -21,6 +21,7 @@
           <el-table-column prop="product" label="产品" align="center" />
           <el-table-column prop="kind" label="文件类型" align="center" />
           <el-table-column prop="fileName" label="文件名" align="center" />
+          <el-table-column prop="version" label="版本号" align="center" />
           <el-table-column prop="description" label="说明" align="center" />
           <el-table-column
             v-slot="scope"
@@ -34,6 +35,7 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="downloadAll(solutionVersion.files)">全部下载</el-button>
+        <el-button type="primary" @click="export2Excel(solutionVersion)">导出配套关系</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -41,6 +43,7 @@
 
 <script>
 import { s3, bucket } from '../../utils/s3'
+import moment from 'moment'
 
 export default {
   data() {
@@ -58,20 +61,6 @@ export default {
     this.bucket = bucket
   },
   methods: {
-    // download(key) {
-    //   const params = {
-    //     Bucket: this.bucket,
-    //     Key: key
-    //   }
-    //   const url = this.s3.getSignedUrl('getObject', params)
-    //   this.$message({
-    //     message: '开始下载文件' + key + '，请耐心等待',
-    //     type: 'success'
-    //   })
-    //   const a = document.createElement('a')
-    //   a.href = url
-    //   a.click()
-    // },
     downloadAll(filesString) {
       this.$message({
         message: '开始下载所有配套文件，请耐心等待',
@@ -101,8 +90,20 @@ export default {
           node.parentNode.removeChild(node)
         }, self.removeDelay)
       }, this.triggerDelay)
+    },
+    export2Excel(solutionVersion) {
+      require.ensure([], () => {
+        const { export_json_to_excel } = require('../../excel/Export2Excel')
+        const tHeader = ['产品', '文件类型', '文件名', '版本号', '说明']
+        const filterVal = ['product', 'kind', 'fileName', 'version', 'description']
+        const list = JSON.parse(solutionVersion.files)
+        const data = this.formatJson(filterVal, list)
+        export_json_to_excel(tHeader, data, solutionVersion.name + '配套版本' + moment(new Date()).format('YYYYMMDDHHmmss'))
+      })
+    },
+    formatJson(filterVal, jsonData) {
+      return jsonData.map(v => filterVal.map(j => v[j]))
     }
-
   }
 }
 </script>

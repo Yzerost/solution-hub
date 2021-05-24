@@ -42,9 +42,9 @@
         <template>
           <el-button type="text" size="small" round @click="editDialogFormVisible = true,beforeEdit(scope.row)">编辑</el-button>
           <el-dialog custom-class="customWidth" title="编辑解决方案版本" :visible.sync="editDialogFormVisible" :close-on-click-modal="false">
-            <el-form :model="editSolutionVersion" :label-position="labelPosition" label-width="15%">
+            <el-form :model="editSolutionVersion" :label-position="labelPosition" label-width="10%">
               <el-form-item label="解决方案">
-                <el-select v-model="editSolutionVersion.solution" filterable placeholder="选择解决方案" value-key="id" style="width: 30%" @change="getEditSolutionColumn">
+                <el-select v-model="editSolutionVersion.solution" filterable placeholder="选择解决方案" value-key="id"  @change="getEditSolutionColumn">
                   <el-option
                     v-for="solution in solutions"
                     :key="solution.id"
@@ -60,7 +60,7 @@
                 <el-input v-model="editSolutionVersion.version" />
               </el-form-item>
               <el-form-item label="发布状态:">
-                <el-select v-model="editSolutionVersion.status" placeholder="选择发布状态" value-key="id" style="width: 25%" @change="getEditStatusColumn">
+                <el-select v-model="editSolutionVersion.status" placeholder="选择发布状态" value-key="id"  @change="getEditStatusColumn">
                   <el-option
                     v-for="status in statusList"
                     :key="status.value"
@@ -152,6 +152,11 @@
                     </el-select>
                   </template>
                 </el-table-column>
+                <el-table-column label="版本号" align="center">
+                  <template slot-scope="scope">
+                    <el-input v-model="scope.row.version" />
+                  </template>
+                </el-table-column>
                 <el-table-column label="描述" align="center">
                   <template slot-scope="scope">
                     <el-input v-model="scope.row.description" />
@@ -190,7 +195,7 @@
     <el-col :span="1" class="grid">
       <el-button type="primary" icon="el-icon-plus" size="mini" round @click="addDialogFormVisible = true,getSolutions()">新增</el-button>
       <el-dialog custom-class="customWidth" title="新建解决方案版本" :visible.sync="addDialogFormVisible" :close-on-click-modal="false">
-        <el-form :model="solutionVersion" :label-position="labelPosition" label-width="15%">
+        <el-form :model="solutionVersion" :label-position="labelPosition" label-width="10%">
           <el-form-item label="解决方案:">
             <el-select v-model="solutionVersion.solution" filterable placeholder="选择解决方案" value-key="id" style="width: 30%" @change="getSolutionColumn">
               <el-option
@@ -300,6 +305,11 @@
                 </el-select>
               </template>
             </el-table-column>
+            <el-table-column label="版本号" align="center">
+              <template slot-scope="scope">
+                <el-input v-model="scope.row.version" />
+              </template>
+            </el-table-column>
             <el-table-column label="描述" align="center">
               <template slot-scope="scope">
                 <el-input v-model="scope.row.description" />
@@ -374,8 +384,8 @@ export default {
           label: '测试'
         },
         {
-          value: '预发布',
-          label: '预发布'
+          value: '受限发布',
+          label: '受限发布'
         }, {
           value: '发布',
           label: '发布'
@@ -480,6 +490,7 @@ export default {
           'kind': file.kind,
           'product': file.product,
           'fileName': file.fileInfo.FileName,
+          'version': file.version,
           'key': file.fileInfo.Key,
           'description': file.description
         })
@@ -534,6 +545,7 @@ export default {
         fileList.push({
           'product': file.product,
           'kind': file.kind,
+          'version': file.version,
           'fileInfo': { 'FileName': file.fileName, 'Key': file.key },
           'description': file.description
         })
@@ -563,6 +575,7 @@ export default {
           'product': file.product,
           'fileName': file.fileInfo.FileName,
           'key': file.fileInfo.Key,
+          'version': file.version,
           'description': file.description
         })
       })
@@ -656,6 +669,9 @@ export default {
 }
 .el-form-item__label {
   font-size: 12px;
+}
+.el-form .el-select{
+  width: 100%;
 }
 .customWidth{
   width:80%;
